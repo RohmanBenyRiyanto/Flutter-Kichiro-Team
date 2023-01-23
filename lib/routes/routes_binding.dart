@@ -17,3 +17,12 @@ class RegisterScreensBindings extends Bindings {
     );
   }
 }
+
+class MainScreensBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<ControllerMainScreens>(
+      () => ControllerMainScreens(),
+    );
+  }
+}

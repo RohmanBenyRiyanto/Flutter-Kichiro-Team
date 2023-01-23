@@ -6,6 +6,7 @@ export 'package:google_fonts/google_fonts.dart';
 export 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 export 'package:flutter_screenutil/flutter_screenutil.dart';
 export 'package:kichiro_team/utils/scroll_configuration.dart';
+export 'package:dotted_border/dotted_border.dart';
 
 // ROUTE
 export 'package:kichiro_team/routes/routes_names.dart';
@@ -17,6 +18,10 @@ export 'package:kichiro_team/views/splash_screens.dart';
 export 'package:kichiro_team/views/login_screens.dart';
 export 'package:kichiro_team/views/register_screens.dart';
 export 'package:kichiro_team/views/home_screens.dart';
+export 'package:kichiro_team/views/cart_screens.dart';
+export 'package:kichiro_team/views/profile_screens.dart';
+export 'package:kichiro_team/views/edit_profile_screens.dart';
+export 'package:kichiro_team/views/detail_team_screens.dart';
 
 // THEMES
 export 'package:kichiro_team/themes/themes_color.dart';
@@ -26,9 +31,13 @@ export 'package:kichiro_team/themes/themes_margin.dart';
 // CONTROLLERS
 export 'package:kichiro_team/controllers/controller_splash_screens.dart';
 export 'package:kichiro_team/controllers/controller_form_password.dart';
+export 'package:kichiro_team/controllers/controller_main_screens.dart';
 
 // COMPONENTS
 export 'package:kichiro_team/components/text_form_field.dart';
 export 'package:kichiro_team/components/text_form_password.dart';
 export 'package:kichiro_team/components/button_primary.dart';
 export 'package:kichiro_team/components/app_bar.dart';
+export 'package:kichiro_team/components/card_produk.dart';
+export 'package:kichiro_team/components/card_cart.dart';
+export 'package:kichiro_team/components/button_action.dart';

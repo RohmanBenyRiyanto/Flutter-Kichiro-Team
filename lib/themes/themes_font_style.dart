@@ -3,7 +3,7 @@ import '../utils/importer.dart';
 abstract class FontStyles {
   static TextStyle h1 = GoogleFonts.poppins(
     fontSize: 20.sp,
-    fontWeight: semiBold,
+    fontWeight: bold,
   );
 
   static TextStyle h2 = GoogleFonts.poppins(

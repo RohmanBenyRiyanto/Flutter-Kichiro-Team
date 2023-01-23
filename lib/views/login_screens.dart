@@ -97,7 +97,7 @@ class LoginScreens extends StatelessWidget {
           ButtonPrimary(
             text: 'Masuk',
             onPressed: () {
-              Get.offAllNamed(RouteNames.homeScreens);
+              Get.offAllNamed(RouteNames.mainScreens);
             },
           ),
           SizedBox(

@@ -9,12 +9,16 @@ class AppBars extends StatelessWidget implements PreferredSizeWidget {
     this.onPressed,
     this.actions,
     this.useLeading = true,
+    this.backgroundColor = ThemesColor.whiteColor,
+    this.titleColor = ThemesColor.darkColor,
     this.widgetTittle,
   }) : super(key: key);
 
   final String? title;
   final bool? useLeading;
   Function? onPressed;
+  Color backgroundColor;
+  Color titleColor;
   final List<Widget>? actions;
   final Widget? widgetTittle;
 
@@ -22,13 +26,13 @@ class AppBars extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
-      backgroundColor: ThemesColor.whiteColor,
+      backgroundColor: backgroundColor,
       centerTitle: widgetTittle == null ? true : false,
       title: widgetTittle ??
           Text(
             title ?? 'Tittle',
             style: FontStyles.body1.copyWith(
-              color: ThemesColor.darkColor,
+              color: titleColor,
             ),
           ),
       leading: useLeading == true
@@ -38,7 +42,7 @@ class AppBars extends StatelessWidget implements PreferredSizeWidget {
               }),
               child: Container(
                 height: 18.h,
-                margin: EdgeInsets.only(left: ThemesMargin.horizontalMargin8),
+                color: backgroundColor,
                 child: const Icon(
                   Icons.arrow_back_ios,
                   size: 18,

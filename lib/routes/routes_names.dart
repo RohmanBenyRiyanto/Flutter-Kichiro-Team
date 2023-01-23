@@ -3,6 +3,7 @@ abstract class RouteNames {
   static const homeScreens = '/homeScreens';
   static const loginScreens = '/loginScreens';
   static const registerScreens = '/registerScreens';
+  static const mainScreens = '/mainScreens';
   static const cartScreens = '/cartScreens';
   static const profileScreens = '/profileScreens';
   static const editProfileScreens = '/editProfileScreens';
