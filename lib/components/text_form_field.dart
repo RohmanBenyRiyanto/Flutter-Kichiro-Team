@@ -54,7 +54,6 @@ class TextFormFields extends StatelessWidget {
       maxLines: maxLines,
       decoration: InputDecoration(
         isCollapsed: true,
-        isDense: true,
         counterText: "",
         hintText: hintText ?? 'Hint Text',
         hintStyle: FontStyles.body2.copyWith(
@@ -62,7 +61,7 @@ class TextFormFields extends StatelessWidget {
         ),
         contentPadding: EdgeInsets.symmetric(
           horizontal: ThemesMargin.horizontalMargin14,
-          vertical: ThemesMargin.setHeight(11.0),
+          vertical: ThemesMargin.setHeight(11.5),
         ),
         border: OutlineInputBorder(
           borderRadius: ThemesMargin.defaultRadius,

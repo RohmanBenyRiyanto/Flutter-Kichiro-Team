@@ -5,6 +5,8 @@ class ProfileScreens extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = AuthController.to;
+
     Widget buildHeader() {
       return Container(
         height: 135.h,
@@ -52,11 +54,20 @@ class ProfileScreens extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: ClipOval(
-                      child: Image.asset(
-                        'assets/img/logo.png',
-                        height: 88.h,
-                        width: 88.h,
-                        fit: BoxFit.cover,
+                      child: GetBuilder<AuthController>(
+                        init: AuthController(),
+                        builder: (controller) =>
+                            controller.firestoreUser.value!.uid == null
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : Image.network(
+                                    controller.firestoreUser.value?.photoUrl ??
+                                        '',
+                                    height: 88.h,
+                                    width: 88.h,
+                                    fit: BoxFit.cover,
+                                  ),
                       ),
                     ),
                   ),
@@ -73,24 +84,29 @@ class ProfileScreens extends StatelessWidget {
         padding: EdgeInsets.symmetric(
           horizontal: ThemesMargin.defaultMargin,
         ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: ThemesMargin.verticalMargin6,
-            ),
-            Text(
-              'Name',
-              style: FontStyles.body1.copyWith(
-                color: ThemesColor.darkColor,
-              ),
-            ),
-            Text(
-              '@username',
-              style: FontStyles.body2.copyWith(
-                color: ThemesColor.subtitleColor,
-              ),
-            ),
-          ],
+        child: GetBuilder<AuthController>(
+          init: AuthController(),
+          builder: (controller) {
+            return Column(
+              children: [
+                SizedBox(
+                  height: ThemesMargin.verticalMargin6,
+                ),
+                Text(
+                  controller.firestoreUser.value?.name ?? '',
+                  style: FontStyles.body1.copyWith(
+                    color: ThemesColor.darkColor,
+                  ),
+                ),
+                Text(
+                  controller.firestoreUser.value?.email ?? '',
+                  style: FontStyles.body2.copyWith(
+                    color: ThemesColor.subtitleColor,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       );
     }
@@ -128,7 +144,9 @@ class ProfileScreens extends StatelessWidget {
             ButtonAction(
               tittle: 'Logout',
               icons: 'assets/icons/ic_logout.svg',
-              onPressed: () {},
+              onPressed: () {
+                authController.signOut();
+              },
             ),
           ],
         ),
