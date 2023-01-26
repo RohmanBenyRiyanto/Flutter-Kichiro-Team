@@ -41,7 +41,16 @@ class AuthController extends GetxController {
   Stream<User?> get user => _auth.authStateChanges();
 
   handleAuthChanged(firebaseUser) async {
-    firestoreUser.bindStream(streamFirestoreUser());
+    try {
+      if (firebaseUser?.uid != null) {
+        firestoreUser.bindStream(streamFirestoreUser());
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error: $e');
+      }
+    }
+
     if (firebaseUser == null) {
       if (kDebugMode) {
         print('Send to signin');
