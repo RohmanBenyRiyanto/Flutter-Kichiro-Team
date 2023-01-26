@@ -8,4 +8,6 @@ abstract class RouteNames {
   static const profileScreens = '/profileScreens';
   static const editProfileScreens = '/editProfileScreens';
   static const detailTeamScreens = '/detailTeamScreens';
+  static const addProductScreens = '/addProductScreens';
+  static const editProductScreens = '/editProductScreens';
 }

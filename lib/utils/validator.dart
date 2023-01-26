@@ -67,7 +67,7 @@ class Validator {
     String pattern = r'^\S+$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value!)) {
-      return 'validator.notEmpty'.tr;
+      return 'Tidak boleh kosong';
     } else {
       return null;
     }

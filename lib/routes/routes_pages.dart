@@ -43,5 +43,9 @@ class RoutePages {
       name: RouteNames.detailTeamScreens,
       page: () => const DetailTeamScreens(),
     ),
+    GetPage(
+      name: RouteNames.addProductScreens,
+      page: () => const AddProductScreens(),
+    ),
   ];
 }

@@ -84,7 +84,7 @@ class ProfileScreens extends StatelessWidget {
         padding: EdgeInsets.symmetric(
           horizontal: ThemesMargin.defaultMargin,
         ),
-        child: GetBuilder<AuthController>(
+        child: GetX<AuthController>(
           init: AuthController(),
           builder: (controller) {
             return Column(
@@ -99,7 +99,7 @@ class ProfileScreens extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  controller.firestoreUser.value?.email ?? '',
+                  controller.firestoreUser.value?.userName ?? '',
                   style: FontStyles.body2.copyWith(
                     color: ThemesColor.subtitleColor,
                   ),

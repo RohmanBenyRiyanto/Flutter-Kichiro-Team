@@ -6,7 +6,10 @@ class EditProfileScreens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = AuthController.to;
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    final FormPasswordController formPasswordController =
+        Get.put(FormPasswordController(), tag: 'updateUser');
 
     authController.nameController.text =
         authController.firestoreUser.value!.name!;
@@ -14,6 +17,67 @@ class EditProfileScreens extends StatelessWidget {
         authController.firestoreUser.value!.userName!;
     authController.emailController.text =
         authController.firestoreUser.value!.email!;
+
+    final TextEditingController password = TextEditingController();
+
+    Future<void> updateUserConfirm(
+        BuildContext context, UserModel updatedUser, String oldEmail) async {
+      final AuthController authController = AuthController.to;
+
+      return Get.dialog(
+        AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8.0))),
+          title: const Text(
+            'Massukkan Password',
+          ),
+          content: GetX<FormPasswordController>(
+            tag: 'updateUser',
+            init: FormPasswordController(),
+            builder: (_) {
+              return TextFormPassword(
+                hintText: "Password",
+                isShow: formPasswordController.isShow.value,
+                onPressed: () {
+                  formPasswordController.showPassword();
+                },
+                controllers: password,
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.done,
+                validator: (value) {
+                  String pattern = r'^.{6,}$';
+                  RegExp regex = RegExp(pattern);
+                  if (!regex.hasMatch(value!)) {
+                    return 'Minimal 6 karakter';
+                  } else {
+                    return null;
+                  }
+                },
+                onChanged: (value) => null,
+                onSaved: (value) => password.text = value!,
+              );
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Batal'),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            TextButton(
+              child: const Text('Update'),
+              onPressed: () async {
+                Get.back();
+                await authController.updateProfile(
+                    context, updatedUser, oldEmail, password.text);
+                authController.streamFirestoreUser();
+              },
+            )
+          ],
+        ),
+      );
+    }
 
     Widget buildContent() {
       return ScrollConfiguration(
@@ -23,7 +87,7 @@ class EditProfileScreens extends StatelessWidget {
             padding:
                 EdgeInsets.symmetric(horizontal: ThemesMargin.defaultMargin),
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: GetBuilder<AuthController>(
                 init: AuthController(),
                 builder: (controller) {
@@ -100,8 +164,13 @@ class EditProfileScreens extends StatelessWidget {
                         height: ThemesMargin.verticalMargin8,
                       ),
                       TextFormFields(
-                        hintText: "Nama Lengkap",
+                        hintText: "Masukan nama lengkap",
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.name,
                         controllers: authController.nameController,
+                        validator: Validator().name,
+                        onSaved: (value) =>
+                            authController.nameController.text = value!,
                       ),
                       SizedBox(
                         height: ThemesMargin.verticalMargin12,
@@ -116,8 +185,14 @@ class EditProfileScreens extends StatelessWidget {
                         height: ThemesMargin.verticalMargin8,
                       ),
                       TextFormFields(
-                        hintText: "username",
+                        hintText: "Masukan username",
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.text,
                         controllers: authController.usernameController,
+                        validator: Validator().username,
+                        onChanged: (value) => null,
+                        onSaved: (value) =>
+                            authController.usernameController.text = value!,
                       ),
                       SizedBox(
                         height: ThemesMargin.verticalMargin12,
@@ -134,13 +209,39 @@ class EditProfileScreens extends StatelessWidget {
                       TextFormFields(
                         hintText: "email@gmail.com",
                         controllers: authController.emailController,
+                        textInputAction: TextInputAction.done,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: Validator().email,
+                        onChanged: (value) => null,
+                        onSaved: (value) =>
+                            authController.emailController.text = value!,
                       ),
                       SizedBox(
                         height: ThemesMargin.verticalMargin24,
                       ),
                       ButtonPrimary(
                         text: 'Simpan',
-                        onPressed: () {},
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            SystemChannels.textInput
+                                .invokeMethod('TextInput.hide');
+                            formKey.currentState!.save();
+                            UserModel user = UserModel(
+                              uid: authController.firestoreUser.value!.uid,
+                              name: authController.nameController.text.trim(),
+                              userName:
+                                  authController.usernameController.text.trim(),
+                              email: authController.emailController.text.trim(),
+                              photoUrl:
+                                  authController.firestoreUser.value!.photoUrl,
+                              createdAt:
+                                  authController.firestoreUser.value!.createdAt,
+                              updatedAt: Timestamp.now(),
+                            );
+                            updateUserConfirm(context, user,
+                                authController.emailController.text.trim());
+                          }
+                        },
                       ),
                       SizedBox(
                         height: ThemesMargin.verticalMargin24,
@@ -158,8 +259,14 @@ class EditProfileScreens extends StatelessWidget {
     return Scaffold(
       backgroundColor: ThemesColor.whiteColor,
       appBar: AppBars(
-        title: 'Edit Profile',
-      ),
+          title: 'Edit Profile',
+          onPressed: () {
+            Get.back();
+            authController.nameController.clear();
+            authController.usernameController.clear();
+            authController.emailController.clear();
+            password.clear();
+          }),
       body: buildContent(),
     );
   }

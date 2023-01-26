@@ -2,6 +2,7 @@ import '../utils/importer.dart';
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
+
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -12,8 +13,6 @@ class AuthController extends GetxController {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   Rxn<User> firebaseUser = Rxn<User>();
   Rxn<UserModel> firestoreUser = Rxn<UserModel>();
-
-  UserModel userModel = UserModel();
 
   @override
   void onReady() async {
@@ -76,27 +75,36 @@ class AuthController extends GetxController {
   }
 
   signInWithEmailAndPassword(BuildContext context) async {
-    showLoadingIndicator();
     try {
       await _auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
       emailController.clear();
       passwordController.clear();
-      hideLoadingIndicator();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        Get.snackbar('Error', 'No user found for that email.',
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Error',
+          'No user found for that email.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: ThemesColor.errorColor,
+          colorText: ThemesColor.whiteColor,
+          margin: const EdgeInsets.all(8),
+        );
       } else if (e.code == 'wrong-password') {
-        Get.snackbar('Error', 'Wrong password provided for that user.',
-            snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar(
+          'Error',
+          'Wrong password provided for that user.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: ThemesColor.errorColor,
+          colorText: ThemesColor.whiteColor,
+          margin: const EdgeInsets.all(8),
+        );
       }
     }
   }
 
   registerEmailPassword(BuildContext context) async {
-    showLoadingIndicator();
     try {
       await _auth
           .createUserWithEmailAndPassword(
@@ -141,7 +149,6 @@ class AuthController extends GetxController {
           emailController.clear();
           passwordController.clear();
           confirmPasswordController.clear();
-          hideLoadingIndicator();
         },
       );
     } on FirebaseAuthException catch (e) {
@@ -150,16 +157,18 @@ class AuthController extends GetxController {
           'Error',
           'The password provided is too weak.',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: ThemesColor.errorColor,
+          colorText: ThemesColor.whiteColor,
+          margin: const EdgeInsets.all(8),
         );
       } else if (e.code == 'email-already-in-use') {
         Get.snackbar(
           'Error',
           'The account already exists for that email.',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
+          backgroundColor: ThemesColor.errorColor,
+          colorText: ThemesColor.whiteColor,
+          margin: const EdgeInsets.all(8),
         );
       }
     } catch (e) {
@@ -167,8 +176,93 @@ class AuthController extends GetxController {
         'Error',
         'Error: $e',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: ThemesColor.errorColor,
+        colorText: ThemesColor.whiteColor,
+        margin: const EdgeInsets.all(8),
+      );
+    }
+  }
+
+  //handles updating the user when updating profile
+  Future<void> updateProfile(
+    BuildContext context,
+    UserModel user,
+    String oldEmail,
+    String password,
+  ) async {
+    try {
+      try {
+        await _auth
+            .signInWithEmailAndPassword(email: oldEmail, password: password)
+            .then((firebaseUser) async {
+          await firebaseUser.user!
+              .updateEmail(user.email!)
+              .then((value) => updateUserFirestore(user, firebaseUser.user!));
+        });
+
+        Get.snackbar(
+          'Success',
+          'Profile updated successfully.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: ThemesColor.succesColor,
+          colorText: ThemesColor.whiteColor,
+          margin: const EdgeInsets.all(8),
+        );
+      } catch (err) {
+        if (kDebugMode) {
+          print('Caught error: $err');
+        }
+        if (err.toString() ==
+            "[firebase_auth/email-already-in-use] The email address is already in use by another account.") {
+          Get.snackbar(
+            'Error',
+            'The email address is already in use by another account.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: ThemesColor.errorColor,
+            colorText: ThemesColor.whiteColor,
+            margin: const EdgeInsets.all(8),
+          );
+        } else {
+          Get.snackbar(
+            'Error',
+            'The Password is incorrect.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: ThemesColor.errorColor,
+            colorText: ThemesColor.whiteColor,
+            margin: const EdgeInsets.all(8),
+          );
+        }
+        Get.snackbar(
+          'Error',
+          'Error: $err',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: ThemesColor.errorColor,
+          colorText: ThemesColor.whiteColor,
+          margin: const EdgeInsets.all(8),
+        );
+      }
+    } on PlatformException catch (error) {
+      //List<String> errors = error.toString().split(',');
+      // print("Error: " + errors[1]);
+      if (kDebugMode) {
+        print(error.code);
+      }
+      String authError;
+      switch (error.code) {
+        case 'ERROR_WRONG_PASSWORD':
+          authError = 'Password is incorrect.';
+          break;
+        default:
+          authError = 'Unknown user';
+          break;
+      }
+      Get.snackbar(
+        'Password Error',
+        authError,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: ThemesColor.errorColor,
+        colorText: ThemesColor.whiteColor,
+        margin: const EdgeInsets.all(8),
       );
     }
   }
@@ -187,7 +281,6 @@ class AuthController extends GetxController {
 
   // Sign out
   void signOut() {
-    showLoadingIndicator();
     try {
       nameController.clear();
       usernameController.clear();
@@ -198,14 +291,14 @@ class AuthController extends GetxController {
       _auth.signOut().then(
             (value) => Get.offAllNamed(RouteNames.loginScreens),
           );
-      hideLoadingIndicator();
     } catch (e) {
       Get.snackbar(
         'Error',
         'Error: $e',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
+        backgroundColor: ThemesColor.errorColor,
+        colorText: ThemesColor.whiteColor,
+        margin: const EdgeInsets.all(8),
       );
     }
   }

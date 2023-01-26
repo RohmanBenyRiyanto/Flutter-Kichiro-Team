@@ -3,7 +3,14 @@ import '../utils/importer.dart';
 class CardProduct extends StatelessWidget {
   const CardProduct({
     Key? key,
+    required this.produkModel,
+    this.onPressed,
+    this.buttonTitle,
   }) : super(key: key);
+
+  final ProdukModel produkModel;
+  final String? buttonTitle;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +33,7 @@ class CardProduct extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4.0.r),
               child: Image.network(
-                'https://lzd-img-global.slatic.net/g/p/caaf924e28e4a62ccf39ea8cb1abdbd2.jpg_720x720q80.jpg_.webp',
+                produkModel.image,
                 fit: BoxFit.cover,
               ),
             ),
@@ -44,7 +51,7 @@ class CardProduct extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'KAOS OVERSIZE WIBU T-SHIRT',
+                      produkModel.name,
                       style: FontStyles.h3.copyWith(
                         color: ThemesColor.darkColor,
                         overflow: TextOverflow.ellipsis,
@@ -52,13 +59,13 @@ class CardProduct extends StatelessWidget {
                       maxLines: 2,
                     ),
                     Text(
-                      'By Kichiro Team',
+                      'By ${produkModel.creator}',
                       style: FontStyles.smallregular.copyWith(
                         color: ThemesColor.subtitleColor,
                       ),
                     ),
                     Text(
-                      'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
+                      produkModel.description,
                       style: FontStyles.caption.copyWith(
                         color: ThemesColor.subtitleColor,
                         overflow: TextOverflow.ellipsis,
@@ -70,7 +77,7 @@ class CardProduct extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Rp. 100.000',
+                          'Rp. ${produkModel.price}',
                           style: FontStyles.h4.copyWith(
                             color: ThemesColor.greyColor,
                             overflow: TextOverflow.ellipsis,
@@ -80,19 +87,22 @@ class CardProduct extends StatelessWidget {
                         SizedBox(
                           width: ThemesMargin.horizontalMargin8,
                         ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                            vertical: 8.0,
-                          ),
-                          decoration: BoxDecoration(
-                            color: ThemesColor.primaryColor,
-                            borderRadius: BorderRadius.circular(4.0.r),
-                          ),
-                          child: Text(
-                            'Add to Cart',
-                            style: FontStyles.overlineMedium.copyWith(
-                              color: ThemesColor.whiteColor,
+                        GestureDetector(
+                          onTap: onPressed,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                              vertical: 8.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: ThemesColor.primaryColor,
+                              borderRadius: BorderRadius.circular(4.0.r),
+                            ),
+                            child: Text(
+                              buttonTitle ?? 'Add to Cart',
+                              style: FontStyles.overlineMedium.copyWith(
+                                color: ThemesColor.whiteColor,
+                              ),
                             ),
                           ),
                         )
