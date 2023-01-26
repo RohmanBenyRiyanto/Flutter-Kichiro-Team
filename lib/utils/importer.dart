@@ -50,6 +50,7 @@ export 'package:kichiro_team/components/app_bar.dart';
 export 'package:kichiro_team/components/card_produk.dart';
 export 'package:kichiro_team/components/card_cart.dart';
 export 'package:kichiro_team/components/button_action.dart';
+export 'package:kichiro_team/components/loading.dart';
 
 // DATA MODELS
 export 'package:kichiro_team/models/user_models.dart';

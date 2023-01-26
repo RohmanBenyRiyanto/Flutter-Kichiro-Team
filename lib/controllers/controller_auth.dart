@@ -76,12 +76,14 @@ class AuthController extends GetxController {
   }
 
   signInWithEmailAndPassword(BuildContext context) async {
+    showLoadingIndicator();
     try {
       await _auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
       emailController.clear();
       passwordController.clear();
+      hideLoadingIndicator();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Get.snackbar('Error', 'No user found for that email.',
@@ -94,6 +96,7 @@ class AuthController extends GetxController {
   }
 
   registerEmailPassword(BuildContext context) async {
+    showLoadingIndicator();
     try {
       await _auth
           .createUserWithEmailAndPassword(
@@ -138,6 +141,7 @@ class AuthController extends GetxController {
           emailController.clear();
           passwordController.clear();
           confirmPasswordController.clear();
+          hideLoadingIndicator();
         },
       );
     } on FirebaseAuthException catch (e) {
@@ -182,10 +186,27 @@ class AuthController extends GetxController {
   }
 
   // Sign out
-  Future<void> signOut() {
-    nameController.clear();
-    emailController.clear();
-    passwordController.clear();
-    return _auth.signOut();
+  void signOut() {
+    showLoadingIndicator();
+    try {
+      nameController.clear();
+      usernameController.clear();
+      emailController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
+
+      _auth.signOut().then(
+            (value) => Get.offAllNamed(RouteNames.loginScreens),
+          );
+      hideLoadingIndicator();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Error: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 }
