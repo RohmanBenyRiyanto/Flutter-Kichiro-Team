@@ -119,6 +119,7 @@ class LoginScreens extends StatelessWidget {
                   SystemChannels.textInput.invokeMethod('TextInput.hide');
                   await loginController.signInWithEmailAndPassword(context);
                 }
+                // loginController.logOut();
               },
             ),
             SizedBox(

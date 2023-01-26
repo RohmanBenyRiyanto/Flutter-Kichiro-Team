@@ -160,6 +160,7 @@ class AuthController extends GetxController {
           confirmPasswordController.clear();
         },
       );
+      // dialogWaitingConfirmationEmail();
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         Get.snackbar(
@@ -311,4 +312,23 @@ class AuthController extends GetxController {
       );
     }
   }
+
+  void logOut() {
+    _auth.signOut();
+    Get.offAllNamed(RouteNames.loginScreens);
+  }
+
+  // dialog waiting confirmation email on sign up
+  // void dialogWaitingConfirmationEmail() {
+  //   Get.defaultDialog(
+  //     title: 'Please verify your email',
+  //     middleText:
+  //         'Please check your email and click on the link to verify your account.',
+  //     textConfirm: 'OK',
+  //     confirmTextColor: ThemesColor.whiteColor,
+  //     onConfirm: () {
+  //       Get.offAllNamed(RouteNames.loginScreens);
+  //     },
+  //   );
+  // }
 }

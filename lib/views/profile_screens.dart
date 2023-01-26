@@ -145,7 +145,7 @@ class ProfileScreens extends StatelessWidget {
               tittle: 'Logout',
               icons: 'assets/icons/ic_logout.svg',
               onPressed: () {
-                authController.signOut();
+                authController.logOut();
               },
             ),
           ],
