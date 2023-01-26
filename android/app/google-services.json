@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "236215848856",
+    "project_id": "kichiro-team",
+    "storage_bucket": "kichiro-team.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236215848856:android:127cbc0f3a3dbf275a65ed",
+        "android_client_info": {
+          "package_name": "com.example.kichiro_team"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236215848856-ovi1k7d6m8vqv1rdi2ebik8vae6pmu9p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOe3MOKFTccsOcj0MZfY79y1kwdBFuN6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236215848856-ovi1k7d6m8vqv1rdi2ebik8vae6pmu9p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

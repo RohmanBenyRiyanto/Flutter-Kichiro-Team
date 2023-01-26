@@ -45,7 +45,6 @@ class TextFormPassword extends StatelessWidget {
       textInputAction: textInputAction,
       decoration: InputDecoration(
         isCollapsed: true,
-        isDense: true,
         hintText: hintText ?? 'Masukkan password anda',
         hintStyle: FontStyles.body2.copyWith(
           color: ThemesColor.subtitleColor,
